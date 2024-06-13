@@ -1,8 +1,7 @@
-import api.azure
 
 class ReceiptAnalyzer:
-    def __init__(self, azure_key, azure_endpoint):
-        self.azure_api_client = api.azure.AzureDocClient(azure_key, azure_endpoint)
+    def __init__(self, azure_api_client):
+        self.azure_api_client = azure_api_client
 
     def analyze_receipt(self, url: str=None):
         # #url  = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/no-frills-receipt-redeem"\

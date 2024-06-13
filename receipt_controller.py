@@ -1,20 +1,19 @@
 import os
+from api.azure import AzureDocClient
+from api.google_sheet import SheetAPIClient
 from services.receipt_analyzer import ReceiptAnalyzer
 from services.sheet_saver import SheetSaver
 from services.transformer import Transformer
 
 class ReceiptController:
     def __init__(self, azure_key, azure_endpoint):
-        self.receipt_analyzer = ReceiptAnalyzer(azure_key, azure_endpoint)
-        self.sheet_saver = SheetSaver()
+        self.receipt_analyzer = ReceiptAnalyzer(AzureDocClient(azure_key, azure_endpoint))
+        self.sheet_saver = SheetSaver(SheetAPIClient())
         self.transformer = Transformer()
 
     def process_receipt(self, receiptURL):
         analysis = self.receipt_analyzer.analyze_receipt(receiptURL)
-        self.sheet_saver.append_to_google_sheet(self.transform_analysis(analysis))
-
-    def transform_analysis(self, analyzed_data):
-        return self.transformer.transform(analyzed_data)
+        self.sheet_saver.append_to_google_sheet(self.transformer.generate_sheet_request(analysis))
 
 if __name__ == "__main__":
     key = os.environ['document_analysis_client_key']

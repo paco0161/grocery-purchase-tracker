@@ -1,5 +1,4 @@
 from sorcery import dict_of
-from api.google_sheet import SheetAPIClient
 
 class SheetSaver:
     # Constant Class Attributes
@@ -11,11 +10,11 @@ class SheetSaver:
     options = dict_of(SPREADSHEET_ID, RANGE_NAME, 
                      INCLUDE_VALUES_IN_RESPONSE, VALUE_INPUT_OPTION, INSERT_DATA_OPTION) 
 
-    def __init__(self):
-        self.sheet_api_client = SheetAPIClient()
+    def __init__(self, sheet_api_client):
+        self.sheet_api_client = sheet_api_client
 
-    def append_to_google_sheet(self, values: list=None):
-        self.sheet_api_client.append(values, **self.options)
+    def append_to_google_sheet(self, sheetRequest):
+        self.sheet_api_client.append(sheetRequest, **self.options)
 
 if __name__ == "__main__":
     sheet_saver = SheetSaver()
