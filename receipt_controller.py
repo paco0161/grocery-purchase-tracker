@@ -11,13 +11,13 @@ class ReceiptController:
         self.sheet_saver = SheetSaver(SheetAPIClient())
         self.transformer = Transformer()
 
-    def process_receipt(self, receiptURL):
-        analysis = self.receipt_analyzer.analyze_receipt(receiptURL)
+    def process_receipt(self, receiptURLs: list):
+        analysis = self.receipt_analyzer.analyze_receipt(receiptURL for receiptURL in receiptURLs)
         self.sheet_saver.append_to_google_sheet(self.transformer.generate_sheet_request(analysis))
 
 if __name__ == "__main__":
     key = os.environ['document_analysis_client_key']
     endpoint = os.environ['document_analysis_client_endpoint']
-    receiptURL = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/no-frills-receipt-redeem"
+    receiptURL = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/no_frills_receipt-ZpucBZ3A8uljhFcEJ1xFMU9Q18lcMJ.jpeg"
     controller = ReceiptController(key, endpoint)
-    controller.process_receipt(receiptURL)
+    controller.process_receipt([receiptURL])
