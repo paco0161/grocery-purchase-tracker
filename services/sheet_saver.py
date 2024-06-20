@@ -1,4 +1,4 @@
-from sorcery import dict_of
+from sorcery import dict_of 
 
 class SheetSaver:
     # Constant Class Attributes
