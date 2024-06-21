@@ -36,7 +36,7 @@ class GroceryStoreEnum(Enum):
         'REXALL': ["REXALL"],
         'BESTCO': ["BESTCO"],
         'COSTCO': ["COSTCO"],
-        'TNT': ["T&T", "TNT"],
+        'TNT': ["T&T", "TNT", "T&T SUPERMARKET"],
         'CANADIAN_TIRE': ["CANADIAN TIRE", "CANTIRE"],
         'IKEA': ["IKEA"]
     }

@@ -5,7 +5,7 @@ const processReceipt = async (receiptURLs: string): Promise<any> => {
     const response = await axios.request({
         method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
-		url: 'http://localhost:5000/api/process-receipt',
+		url: '/api/process-receipt',
 		data: { receiptURLs },
     });
     return response.data;
