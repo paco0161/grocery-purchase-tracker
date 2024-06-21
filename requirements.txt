@@ -1,3 +1,5 @@
+numpy==1.26.0
+Flask==3.0.3
 asttokens==2.4.1
 azure-ai-formrecognizer==3.3.3
 azure-common==1.1.28
@@ -9,7 +11,6 @@ charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
 executing==2.0.1
-Flask==3.0.3
 google-api-core==2.19.0
 google-api-python-client==2.132.0
 google-auth==2.30.0
