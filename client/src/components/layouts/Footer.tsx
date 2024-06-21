@@ -14,7 +14,7 @@ export const Footer: FCC = () => {
 						rel='noopener noreferrer'
 						className='ml-1 text-gray-600 hover:text-blue-500 hover:transition-colors'
 					>
-						kevinSg
+						paco0161
 						<i className='fa-solid fa-arrow-up-right-from-square ml-1 text-xs'></i>
 					</a>
 				</span>
