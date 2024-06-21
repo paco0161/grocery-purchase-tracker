@@ -35,4 +35,4 @@ if __name__ != "__main__":
             response = app.full_dispatch_request()
             return VercelResponse(response.response, response.status_code, response.headers)
 else:
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5328)
