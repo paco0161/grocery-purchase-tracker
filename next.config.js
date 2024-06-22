@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     images: { domains: ['res.cloudinary.com'] },
-    transpilePackages: ['axios'],
+    // transpilePackages: ['axios'],
     rewrites: async () => {
         return [
         {
