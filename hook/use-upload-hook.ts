@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -11,6 +11,7 @@ type ImageRes = {
 };
 
 const imageTypeRegex = /image\/(png|gif|jpg|jpeg)/gm;
+const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
 
 export const useUpload = () => {
 	const [formatImage, setFormatImage] = useState<FormData | null>(null);
@@ -20,13 +21,13 @@ export const useUpload = () => {
 	const [progressStatus, setProgressStatus] = useState(0);
 
 	const inputRef = useRef<HTMLInputElement>(null);
-
+    
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		if (!acceptedFiles.length) return;
 
 		const formData = new FormData();
 		formData.append('file', acceptedFiles[0]);
-		formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+		formData.append('upload_preset', preset);
 
 		setFormatImage(formData);
 	}, []);
@@ -42,7 +43,7 @@ export const useUpload = () => {
 		if (!file?.type.match(imageTypeRegex)) return;
 
 		formData.append('file', file);
-		formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+		formData.append('upload_preset', preset);
 
 		setFormatImage(formData);
 	};

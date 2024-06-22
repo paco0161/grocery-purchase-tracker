@@ -37,7 +37,7 @@ export default function RootLayout({
                     'font-sans',
                 )}
             >
-                {children}
+                
             
 			<ToastContainer
 				position='bottom-center'
@@ -53,6 +53,7 @@ export default function RootLayout({
 				theme='colored'
 			/>
 			{/* <Component {...pageProps} /> */}
+            {children}
 
 			<div className='mx-auto my-4'>
 			<p className='text-xs sm:text-sm font-bold flex justify-center items-center gap-2 flex-col sm:flex-row'>
