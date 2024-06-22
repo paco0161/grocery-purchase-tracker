@@ -88,8 +88,8 @@ export const useUpload = () => {
 					toast.success('Successfully uploaded!');
 				}
 			} catch (err) {
-				if (axios.isAxiosError<{ message: string }>(err)) {
-					toast.error(err.response?.data.message);
+				if (axios.isAxiosError(err)) {
+					toast.error("Axios Error");
 				}
 				if (err instanceof Error) {
 					toast.error(err.message);
