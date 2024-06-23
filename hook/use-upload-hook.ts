@@ -101,6 +101,7 @@ export const useUpload = () => {
 			} catch (err) {
 				if (axios.isAxiosError(err)) {
 					toast.error("Axios Error");
+                    toast.error(err.message);
 				}
 				if (err instanceof Error) {
 					toast.error(err.message);
