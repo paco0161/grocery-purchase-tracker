@@ -29,7 +29,7 @@ class SheetAPIClient:
                 creds.refresh(Request())
             else:
                 config = json.loads(os.environ['CRED'])
-                flow = InstalledAppFlow.from_client_secrets_file(
+                flow = InstalledAppFlow.from_client_config(
                         config, self.SCOPES
                 )
                 creds = flow.run_local_server(port=0)
