@@ -36,8 +36,7 @@ next-env.d.ts
 __pycache__
 
 # Google Credentials
-credentials_test.json
-credentials.json
+credentials*.json
 token.json
 
 # Byte-compiled / optimized / DLL files
