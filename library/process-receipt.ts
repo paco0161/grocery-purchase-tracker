@@ -14,6 +14,5 @@ export const processReceipt = async (receiptURLs: string): Promise<ProcessRespon
         url: `${URL}/process-receipt`,
         data: JSON.stringify({ receiptURLs }),
     });
-
     return {analysis_results: data.analysis_results};
 };
