@@ -1,4 +1,4 @@
-const processReceipt = async (receiptURLs: string): Promise<any> => {
+export const processReceipt = async (receiptURLs: string): Promise<any> => {
     try {
       const response = await fetch('/api/process-receipt', {
         method: 'POST',
@@ -15,6 +15,4 @@ const processReceipt = async (receiptURLs: string): Promise<any> => {
     } catch (err) {
       throw new Error('An error occurred');
     }
- };
-  
-  export default processReceipt;
+};
