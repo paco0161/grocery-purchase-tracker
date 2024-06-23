@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { DROPZONE_OPTIONS } from '@/library/dropzone-option';
 import { uploadFile } from '@/library/upload-file-lib';
+import { processReceipt } from '@/api/process-receipt';
 
 type ImageRes = {
 	public_id: string;
@@ -87,6 +88,16 @@ export const useUpload = () => {
 					setIsSuccess(true);
 					toast.success('Successfully uploaded!');
 				}
+
+                setIsFetching(true);
+                const processData = await processReceipt(data.secure_url);
+
+                if (processData) {
+                    setIsFetching(false);
+					setIsSuccess(true);
+                    toast.success('Successfully processed!');
+                }
+                
 			} catch (err) {
 				if (axios.isAxiosError(err)) {
 					toast.error("Axios Error");

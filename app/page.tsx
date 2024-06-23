@@ -13,25 +13,7 @@ const HomePage: NextPage = () => {
     const [output, setOutput] = useState<string>('');
     const [error, setError] = useState<string>('');
 
-    useEffect(() => {
-    const processImage = async () => {
-      if (u.isSuccess && u.image) {
-        const secureUrl = u.image.secure_url;
-        try {
-          const result = await processReceipt(secureUrl);
-          setOutput(JSON.stringify(result, null, 2));
-          setError('');
-        } catch (err: any) {
-          setOutput('');
-          setError(err.message);
-        }
-      }
-    };
-    
-    processImage();
-  }, [u.isSuccess, u.image]);
-
-	return (
+    return (
 		<div>
 			{!u.isFetching && (
 				<div

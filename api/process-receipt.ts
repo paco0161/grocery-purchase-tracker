@@ -1,20 +1,18 @@
-const processReceipt = async (receiptURLs: string) => {
-    try {
-      const response = await fetch('/api/process-receipt', {
+type ProcessResponse = {
+	analysis_results: string;
+};
+
+export const processReceipt = async (receiptURLs: string): Promise<ProcessResponse> => {
+    const response = await fetch('/api/process-receipt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ receiptURLs }),
-      });
-  
-      if (!response.ok) {
+    });
+
+    if (!response.ok) {
         throw new Error('An error occurred');
-      }
-  
-      const data = await response.json();
-      return data;
-    } catch (err) {
-      throw new Error('An error occurred');
     }
+
+    const data = await response.json();
+    return data;
 };
-  
-module.exports = processReceipt;
