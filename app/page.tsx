@@ -7,7 +7,6 @@ import { Dropzone } from '@/commons/Dropzone';
 import { ButtonFile } from '@/commons/ButtonFile';
 import { InputLink } from '@/commons/InputLink';
 import { ProgressCard } from '@/commons/ProgressCard';
-import processReceipt from '@/api/process-receipt';
 
 const HomePage: NextPage = () => {
 	const u = useUpload();

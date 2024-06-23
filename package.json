@@ -36,10 +36,5 @@
   },
   "engines": {
     "node": "18.x"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^axios$": "axios/dist/node/axios.cjs"
-    }
   }
 }

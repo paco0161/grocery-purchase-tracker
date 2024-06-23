@@ -1,11 +1,11 @@
-const processReceipt = async (receiptURLs: string): Promise<any> => {
+const processReceipt = async (receiptURLs: string) => {
     try {
       const response = await fetch('/api/process-receipt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ receiptURLs })
+        body: JSON.stringify({ receiptURLs }),
       });
-      
+  
       if (!response.ok) {
         throw new Error('An error occurred');
       }
@@ -16,5 +16,5 @@ const processReceipt = async (receiptURLs: string): Promise<any> => {
       throw new Error('An error occurred');
     }
 };
-
-export default processReceipt;
+  
+module.exports = processReceipt;
