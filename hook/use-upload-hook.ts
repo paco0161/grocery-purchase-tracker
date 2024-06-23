@@ -103,7 +103,7 @@ export const useUpload = () => {
                     toast.error(err.message);
 				}
 				if (err instanceof Error) {
-					toast.error(err.message);
+					toast.error(err.stack);
 				}
 				setFormatImage(null);
 				setImage(null);

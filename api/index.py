@@ -26,13 +26,17 @@ def process_receipt():
 
     return jsonify(analysis_results), 200
 
-if __name__ != "__main__":
-    # Required for Vercel serverless function
-    from flask import Request as VercelRequest, Response as VercelResponse
+@app.route("/api/healthchecker", methods=["GET"])
+def healthchecker():
+    return {"status": "success", "message": "Integrate Flask Framework with Next.js"}
 
-    def handler(request: VercelRequest) -> VercelResponse:
-        with app.request_context(request.environ):
-            response = app.full_dispatch_request()
-            return VercelResponse(response.response, response.status_code, response.headers)
-else:
+if __name__ == "__main__":
+    # Required for Vercel serverless function
+#     from flask import Request as VercelRequest, Response as VercelResponse
+
+#     def handler(request: VercelRequest) -> VercelResponse:
+#         with app.request_context(request.environ):
+#             response = app.full_dispatch_request()
+#             return VercelResponse(response.response, response.status_code, response.headers)
+# else:
     app.run(debug=True, host='0.0.0.0', port=5328)
