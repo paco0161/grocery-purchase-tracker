@@ -38,6 +38,7 @@ __pycache__
 # Google Credentials
 credentials*.json
 token.json
+*secret.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

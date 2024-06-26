@@ -1,11 +1,13 @@
 import json
 import os.path
 
+from flask import request
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
 
 class SheetAPIClient:
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -38,12 +40,17 @@ class SheetAPIClient:
                 token.write(creds.to_json())
         return creds
     
-    def _build_service(self):
-        return build("sheets", "v4", credentials=self._get_credentials())
+    def _build_service(self, developerKey):
+        return build("sheets", "v4", developerKey=developerKey)
     
     def append(self, sheetRequest, **kwargs):
         try:
-            service = self._build_service()
+            spreadsheet_id = kwargs['SPREADSHEET_ID']
+            range_name = kwargs['RANGE_NAME']
+            api_key = os.environ['GOOGLE_SHEET_API_KEY']
+            # url = f'https://sheets.googleapis.com/v4/spreadsheets/{spreadsheet_id}/values/{range_name}:append?key={api_key}'
+
+            service = self._build_service(api_key)
 
             # Call the Sheets API
             sheet = service.spreadsheets().values()

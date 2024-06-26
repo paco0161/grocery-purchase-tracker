@@ -2,7 +2,6 @@ import './globals.css'
 import { Inter, Poppins, Roboto_Mono } from 'next/font/google'
 import c from 'clsx';
 import { ToastContainer } from 'react-toastify';
-import { Component } from 'react';
 const poppins = Poppins({
 	weight: ['100', '300', '400', '500', '700'],
 	subsets: ['latin'],

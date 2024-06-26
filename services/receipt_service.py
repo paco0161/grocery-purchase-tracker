@@ -12,4 +12,4 @@ class ReceiptService:
 
     def process_receipt(self, receiptURLs: str):
         analysis = self.receipt_analyzer.analyze_receipt(receiptURLs)
-        self.sheet_saver.append_to_google_sheet(self.transformer.generate_sheet_request(analysis))
+        return self.transformer.generate_sheet_request(analysis)

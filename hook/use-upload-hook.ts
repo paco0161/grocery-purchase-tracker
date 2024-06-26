@@ -1,3 +1,4 @@
+'use client'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
@@ -5,6 +6,8 @@ import axios from 'axios';
 import { DROPZONE_OPTIONS } from '@/library/dropzone-option';
 import { uploadFile } from '@/library/upload-file-lib';
 import { processReceipt } from '@/library/process-receipt';
+import { appendSheetData } from '@/library/google-sheet-actions';
+
 
 type ImageRes = {
 	public_id: string;
@@ -95,7 +98,16 @@ export const useUpload = () => {
                 if (analysis_results) {
                     setIsFetching(false);
 					setIsSuccess(true);
-                    toast.success('Successfully processed!');
+                    toast.success('Successfully processed uploaded receipt!');
+                }
+
+                setIsFetching(true);
+                const result = await appendSheetData(analysis_results);
+                
+                if (result) {
+                    setIsFetching(false);
+                    setIsSuccess(true);
+					toast.success('Successfully get!');
                 }
 
 			} catch (err) {
