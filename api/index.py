@@ -4,7 +4,6 @@ from flask_cors import CORS
 from services.receipt_service import ReceiptService
 
 app = Flask(__name__)
-app.secret_key= os.environ['FLASK_SECRET_KEY']
 CORS(app)
 
 @app.route('/api/process-receipt', methods=['POST'])
