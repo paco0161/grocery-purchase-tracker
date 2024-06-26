@@ -15,7 +15,7 @@ type ImageRes = {
 };
 
 const imageTypeRegex = /image\/(png|gif|jpg|jpeg)/gm;
-const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+const preset = process.env.CLOUDINARY_UPLOAD_PRESET!
 
 export const useUpload = () => {
 	const [formatImage, setFormatImage] = useState<FormData | null>(null);
