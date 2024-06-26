@@ -21,7 +21,7 @@ class GroceryStoreEnum(Enum):
     IKEA = 'IKEA'
 
     _variations = {
-        'NO_FRILLS': ["NICK'S NO FRILLS", "NO FRILLS"],
+        'NO_FRILLS': ["NICK'S NO FRILLS", "NO FRILLS", "NOFRILLS"],
         'WALMART': ["WALMART"],
         'FOODY_WORLD': ["FOODY WORLD"],
         'FARM_FRESH': ["FARM FRESH"],

@@ -15,7 +15,3 @@ class SheetSaver:
 
     def append_to_google_sheet(self, sheetRequest):
         self.sheet_api_client.append(sheetRequest, **self.options)
-
-if __name__ == "__main__":
-    sheet_saver = SheetSaver()
-    sheet_saver.append_to_google_sheet()

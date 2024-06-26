@@ -21,9 +21,6 @@ export const Dropzone: FC<DropzoneProps> = ({ isActive = false, onInputProps }) 
 		>
 			<input {...onInputProps()} />
 
-			<div className='relative w-[115px] h-[88px]'>
-				<NextImage src={BackgroundSvg} fill alt='background upload' priority className='w-full h-full object-cover' />
-			</div>
 
 			<p className={c('text-xs sm:text-sm font-medium text-center', isActive ? 'text-pink-400' : 'text-gray-400')}>
 				Drag & Drop your image here
