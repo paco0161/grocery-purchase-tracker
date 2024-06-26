@@ -1,15 +1,5 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/next"
-      },
-      {
-        "src": "api/index.py",
-        "use": "@vercel/python"
-      }
-    ],
     "functions": {
         "api/**": {
             "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
