@@ -1,6 +1,5 @@
 'use server'
 import { google } from "googleapis";
-import nextBase64 from "next-base64";
 
 type AnalysisResultProps = {
     values: string[][]
@@ -48,13 +47,16 @@ export async function appendSheetData(analysis_results: AnalysisResultProps) {
 }
 
 export async function getGoogleAuthClient() {
-    const credential = JSON.parse(
-        Buffer.from(process.env.GOOGLE_SERVICE_KEY!, "base64").toString()
-    );
-
-    return google.auth.getClient({
-        projectId: process.env.NEXT_PUBLIC_GOOGLE_PROJECT_ID,
-        credentials: credential,
-        scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
+    try {
+        const credential = JSON.parse(
+            Buffer.from(process.env['GOOGLE_SERVICE']!, "base64").toString()
+        );
+        return google.auth.getClient({
+            projectId: process.env.NEXT_PUBLIC_GOOGLE_PROJECT_ID,
+            credentials: credential,
+            scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+        });
+    } catch (error) {
+        console.log('Error when parsing JSON:', error);
+    }
 }
