@@ -1,13 +1,12 @@
 from api.azure import AzureDocClient
-from api.google_sheet import SheetAPIClient
 from services.receipt_analyzer import ReceiptAnalyzer
-from services.sheet_saver import SheetSaver
+# from services.sheet_saver import SheetSaver
 from services.transformer import Transformer
 
 class ReceiptService:
     def __init__(self, azure_key, azure_endpoint):
         self.receipt_analyzer = ReceiptAnalyzer(AzureDocClient(azure_key, azure_endpoint))
-        self.sheet_saver = SheetSaver(SheetAPIClient())
+        # self.sheet_saver = SheetSaver(SheetAPIClient())
         self.transformer = Transformer()
 
     def process_receipt(self, receiptURLs: str):

@@ -14,7 +14,7 @@ export const uploadFile = async ({ formData, onUploadProgress }: UploadFileProps
 	const { data } = await axios.request<ImageResponse>({
 		method: 'POST',
 		headers: { 'Content-Type': 'multipart/form-data' },
-		url: process.env.CLOUDINARY_BASE_URL || '',
+		url: process.env.NEXT_PUBLIC_CLOUDINARY_BASE_URL || '',
 		data: formData,
 		onUploadProgress(progressEvent) {
 			const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
