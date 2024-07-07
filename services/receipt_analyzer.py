@@ -1,13 +1,17 @@
 
+from models.custom_error import APIError
+
+
 class ReceiptAnalyzer:
     def __init__(self, azure_api_client):
         self.azure_api_client = azure_api_client
 
     def analyze_receipt(self, url: str=None):
-        # #url  = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/no-frills-receipt-redeem"\
-        # url = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/walmart_receipt-oDFOPORe76ezGYelZVBwSq0GcQtxcH.jpeg"
-        # # url = "https://emo39ri1zkx7kmwj.public.blob.vercel-storage.com/freshway_check_date-2DBJdaQyqCsgESW4FBmDczX3FwQ2CG.jpeg"
-        return self.azure_api_client.analyze_doc_from_url(url)
+        try:
+            return self.azure_api_client.analyze_doc_from_url(url)
+        except Exception as error:
+            print('Error in analyzing receipt in Azure')
+            raise APIError(f'{error}')
 
     def log_analysis(result):
         for idx, receipt in enumerate(result.documents):
