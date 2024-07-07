@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, request, jsonify
 import os
 from flask_cors import CORS
@@ -22,6 +23,8 @@ dictConfig({
         'handlers': ['wsgi']
     }
 })
+logger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
+logger.setLevel(logging.WARNING)
 
 @app.route('/api/process-receipt', methods=['POST'])
 def process_receipt():
