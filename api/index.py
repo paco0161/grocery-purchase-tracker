@@ -28,6 +28,7 @@ logger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
 logger.setLevel(logging.WARNING)
 
 @app.route('/api/process-receipt', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*')
 def process_receipt():
     app.logger.info('Received receipt %s successfully: ', request.json)
     data = request.json
