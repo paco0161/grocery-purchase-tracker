@@ -7,7 +7,7 @@ type ProcessResponse = {
 
 export const processReceipt = async (receiptURLs: string): Promise<ProcessResponse> => {
     const URL = process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api`
+    ? `/api`
     : "http://localhost:5328/api";
     try {
         const { data } = await axios.request<ProcessResponse>({
