@@ -6,7 +6,7 @@ from logging.config import dictConfig
 from services.receipt_service import ReceiptService
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 dictConfig({
     'version': 1,
