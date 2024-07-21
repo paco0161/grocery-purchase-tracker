@@ -42,7 +42,7 @@ class GroceryStoreEnum(Enum):
         'CANADIAN_TIRE': ["CANADIAN TIRE", "CANTIRE"],
         'IKEA': ["IKEA"],
         'GALLERIA': ['GALLERIA SUPERMARKET', 'GALLERIA', 'Galleria\nSUPERMARKET'],
-        'FOOD_BASICS': ['FOOD BASICS', 'FOOD_BASICS']
+        'FOOD_BASICS': ['FOOD BASICS', 'FOOD_BASICS', 'FOOD\nBASICS']
     }
 
     @classmethod

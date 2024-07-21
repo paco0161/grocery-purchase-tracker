@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 import os
 from flask_cors import CORS
 from logging.config import dictConfig
+from models.cors_decorator import crossdomain
 from services.receipt_service import ReceiptService
 
 app = Flask(__name__)
@@ -27,6 +28,7 @@ logger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
 logger.setLevel(logging.WARNING)
 
 @app.route('/api/process-receipt', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*')
 def process_receipt():
     app.logger.info('Received receipt %s successfully: ', request.json)
     data = request.json
