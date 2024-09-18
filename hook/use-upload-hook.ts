@@ -6,7 +6,7 @@ import axios from 'axios';
 import { DROPZONE_OPTIONS } from '@/library/dropzone-option';
 import { uploadFile } from '@/library/upload-file-lib';
 import { processReceipt } from '@/library/process-receipt';
-import { appendSheetData } from '@/library/google-sheet-actions';
+import { appendSheetData, getSheetData } from '@/library/google-sheet-actions';
 
 
 type ImageRes = {
@@ -16,6 +16,39 @@ type ImageRes = {
 
 const imageTypeRegex = /image\/(png|gif|jpg|jpeg)/gm;
 const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+const spreadsheetId = process.env.NEXT_PUBLIC_GOOGLE_SPREADSHEET_ID!
+const sheetName = process.env.NEXT_PUBLIC_GOOGLE_SHEET_NAME!
+
+function isMonthNaN(date1Str: string): boolean {
+    const date1 = new Date(date1Str);
+    const month1 = date1.getMonth();
+
+    return isNaN(month1);
+}
+
+function isNextMonth(date1Str: string, date2Str: string): boolean {
+    // Parse both date strings into Date objects
+    const date1 = new Date(date1Str);
+    const date2 = new Date(date2Str);
+
+    // Get the year and month for each date
+    const year1 = date1.getFullYear();
+    const month1 = date1.getMonth();
+    console.log(month1)
+    
+    const year2 = date2.getFullYear();
+    const month2 = date2.getMonth();
+    console.log(month2)
+
+    if (year1 === year2) {
+        return month1 != month2;
+    } else if (year1 === year2 + 1 && month1 === 0 && month2 === 11) {
+        // Handle year transition, e.g., January 2024 and December 2023
+        return true;
+    }
+
+    return false;
+}
 
 export const useUpload = () => {
 	const [formatImage, setFormatImage] = useState<FormData | null>(null);
@@ -89,7 +122,6 @@ export const useUpload = () => {
 					setImage(data);
 					setIsFetching(false);
 					setIsSuccess(true);
-					toast.success('Successfully uploaded!');
 				}
 
                 setIsFetching(true);
@@ -102,12 +134,32 @@ export const useUpload = () => {
                 }
 
                 setIsFetching(true);
-                const result = await appendSheetData(analysis_results);
+                const table = {
+                    'majorDimension': 'ROWS',
+                    'values': []
+                }
+                const empty_result = await appendSheetData(spreadsheetId, sheetName, table);
+                const regex = /^.*![A-Z]+\d+:[A-Z]+(\d+)$/;
+                const match = empty_result.result.tableRange.match(regex);
+                if (match) {
+                    const last_row = match[1];
+                    const get_last_row = await getSheetData(spreadsheetId, sheetName.concat("!A", last_row, ":ZZ", last_row))
+                    const last_transaction_date = get_last_row.result.values.at(0)?.at(0)
+                    const current_transaction_date = analysis_results.values.at(0)?.at(0)
+
+                    if (isMonthNaN(last_transaction_date!) || isNextMonth(current_transaction_date!, last_transaction_date!)) {
+                        analysis_results.values.unshift([])
+                        console.log(analysis_results.values)
+                    }
+                }
+
+                setIsFetching(true);
+                const result = await appendSheetData(spreadsheetId, sheetName, analysis_results);
                 
                 if (result) {
                     setIsFetching(false);
                     setIsSuccess(true);
-					toast.success('Successfully get!');
+					toast.success('Successfully added into google sheet!');
                 }
 
 			} catch (err) {

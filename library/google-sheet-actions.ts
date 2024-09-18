@@ -5,28 +5,47 @@ type AnalysisResultProps = {
     values: string[][]
 };
 
-export async function getSheetData() { 
+type GetSheetDataResponse = {
+    range: string,
+    majorDimension: string,
+    values: string[][]
+}
+
+type AppendSheetDataResponse = {
+    spreadsheetId: string;
+    tableRange: string;
+    updates: {
+        spreadsheetId: string;
+        updatedRange: string;
+        updatedData: {
+            range: string;
+            majorDimension: string;
+        };
+    };
+}
+
+export async function getSheetData(spreadsheetId: string, range_name: string): Promise<{result: GetSheetDataResponse}> { 
     const glAuth = await getGoogleAuthClient();
   
     const glSheets = google.sheets({ version: "v4", auth: glAuth });
 
-    const SPREADSHEET_ID = "1u-xmhjFZAYAAkV0ZBNggg7Nf-nZclkR9-PN5FStXDEM"
-    const RANGE_NAME = "'Monthly Grocery Purchase'"
+    const SPREADSHEET_ID = spreadsheetId
+    const RANGE_NAME = range_name
     const get_data = await glSheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
         range: RANGE_NAME,
     });
   
-    return { result: get_data.data.values };
+    return { result: get_data.data as GetSheetDataResponse };
 }
 
-export async function appendSheetData(analysis_results: AnalysisResultProps) { 
+export async function appendSheetData(spreadsheetId: string, range_name: string, analysis_results: AnalysisResultProps): Promise<{result: AppendSheetDataResponse}> { 
     const glAuth = await getGoogleAuthClient();
   
     const glSheets = google.sheets({ version: "v4", auth: glAuth });
 
-    const SPREADSHEET_ID = "1u-xmhjFZAYAAkV0ZBNggg7Nf-nZclkR9-PN5FStXDEM"
-    const RANGE_NAME = "'Monthly Grocery Purchase'"
+    const SPREADSHEET_ID = spreadsheetId
+    const RANGE_NAME = range_name
     const INCLUDE_VALUES_IN_RESPONSE = true
     const VALUE_INPUT_OPTION = "USER_ENTERED"
     const INSERT_DATA_OPTION = "INSERT_ROWS"
@@ -43,7 +62,7 @@ export async function appendSheetData(analysis_results: AnalysisResultProps) {
         }
     });
   
-    return { result: append_valeus.data };
+    return { result: append_valeus.data as AppendSheetDataResponse };
 }
 
 export async function getGoogleAuthClient() {
