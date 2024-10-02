@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+import logging
 
 from models.custom_error import ReceiptTransformError
 from models.grocery_store import GroceryStoreEnum
@@ -7,13 +8,13 @@ from models.sheet_request import SheetRequest
 
 class Transformer:
     def __init__(self):
-        pass
+        self.log = logging.getLogger(__name__)
 
     def generate_sheet_request(self, result) -> SheetRequest:
         values = []
         try:
             for receipt in result.documents:
-                transaction_date = self._transform_transaction_date(receipt.fields.get("TransactionDate"))
+                transaction_date = self._transform_transaction_date(receipt.fields.get("TransactionDate"), receipt.fields.get("MerchantName"))
                 merchant_name = self._transform_merchant_name(receipt.fields.get("MerchantName"))
                 items =  self._transform_items(receipt.fields.get("Items"))
                 total = self._transform_total(receipt.fields.get("Total"), merchant_name, result.content)
@@ -27,10 +28,13 @@ class Transformer:
             print('Error in transforming receipt data')
             raise ReceiptTransformError(f'{error}')
 
-    def _transform_transaction_date(self, transaction_date):
-        if transaction_date:  
-            if not self._check_valid_date(transaction_date.value):
-                transaction_date.value = datetime.strftime(transaction_date.value, '%d/%y/%m')
+    def _transform_transaction_date(self, transaction_date, merchant_name):
+        if transaction_date and merchant_name:
+            if not self._check_valid_date(transaction_date.value) and GroceryStoreEnum.check_mapping(merchant_name.value):
+                if self._transform_merchant_name(merchant_name) == "No Frills":
+                    original = transaction_date.value
+                    transaction_date.value = datetime.strftime(original, '%d/%m/%y')
+                    self.log.info('No Frills Receipt Date was transformed from %s (d/m/y format) to %s', original, transaction_date.value)
             return str(transaction_date.value)
 
     def _transform_merchant_name(self, merchant_name):
