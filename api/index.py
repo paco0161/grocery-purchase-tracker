@@ -24,8 +24,8 @@ dictConfig({
         'handlers': ['wsgi']
     }
 })
-logger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
-logger.setLevel(logging.WARNING)
+azureLogger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
+azureLogger.setLevel(logging.WARNING)
 
 @app.route('/api/process-receipt', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
