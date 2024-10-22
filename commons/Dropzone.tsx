@@ -1,7 +1,7 @@
 import NextImage from 'next/image';
 import c from 'clsx';
 
-import BackgroundSvg from 'public/background.svg';
+import BackgroundSvg from '@/public/try7.svg';
 
 import type { FC } from 'react';
 import type { DropzoneInputProps } from 'react-dropzone';
@@ -21,9 +21,12 @@ export const Dropzone: FC<DropzoneProps> = ({ isActive = false, onInputProps }) 
 		>
 			<input {...onInputProps()} />
 
+            <div className='relative w-[115px] h-[88px]'>
+				<NextImage src={BackgroundSvg} alt='background upload' priority className='w-full h-full object-cover' />
+			</div>
 
 			<p className={c('text-xs sm:text-sm font-medium text-center', isActive ? 'text-pink-400' : 'text-gray-400')}>
-				Drag & Drop your image here
+				Drag & Drop your Grocery Receipt here
 			</p>
 		</div>
 	);

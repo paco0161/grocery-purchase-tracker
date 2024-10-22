@@ -20,10 +20,10 @@ export const processReceipt = async (receiptURLs: string): Promise<ProcessRespon
     } catch (error) {
         console.error('Unexpected Error: ', error);
         if (axios.isAxiosError(error)) {
-            toast.error(error.message);
+            toast.error(error.message, {autoClose: 10000});
         }
         if (error instanceof Error) {
-            toast.error(error.stack);
+            toast.error(error.stack, {autoClose: 10000});
         }
         return {values: [['']]};
     }
