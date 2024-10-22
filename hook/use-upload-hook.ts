@@ -1,4 +1,3 @@
-'use client'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
@@ -92,11 +91,11 @@ export const useUpload = () => {
 				.map((err) => {
 					err.map((el) => {
 						if (el.code.includes('file-invalid-type')) {
-							toast.error('File type must be .png,.jpg,.jpeg,.gif', { theme: 'light' });
+							toast.error('File type must be .png,.jpg,.jpeg,.gif', { theme: 'light', autoClose: 10000 });
 							return;
 						}
 						if (el.code.includes('file-too-large')) {
-							toast.error('File is larger than 10MB', { theme: 'light' });
+							toast.error('File is larger than 10MB', { theme: 'light', autoClose: 10000 });
 							return;
 						}
 					});
@@ -127,47 +126,45 @@ export const useUpload = () => {
                 setIsFetching(true);
                 const analysis_results = await processReceipt(data.secure_url);
 
-                if (analysis_results) {
-                    setIsFetching(false);
-					setIsSuccess(true);
+                if (analysis_results 
+                    && analysis_results.values.length > 0 
+                    && !(analysis_results.values.length === 1 && analysis_results.values[0].length === 1 && analysis_results.values[0][0] === '')) {
                     toast.success('Successfully processed uploaded receipt!');
-                }
 
-                setIsFetching(true);
-                const table = {
-                    'majorDimension': 'ROWS',
-                    'values': []
-                }
-                const empty_result = await appendSheetData(spreadsheetId, sheetName, table);
-                const regex = /^.*![A-Z]+\d+:[A-Z]+(\d+)$/;
-                const match = empty_result.result.tableRange.match(regex);
-                if (match) {
-                    const last_row = match[1];
-                    const get_last_row = await getSheetData(spreadsheetId, sheetName.concat("!A", last_row, ":ZZ", last_row))
-                    const last_transaction_date = get_last_row.result.values.at(0)?.at(0)
-                    const current_transaction_date = analysis_results.values.at(0)?.at(0)
-
-                    if (isMonthNaN(last_transaction_date!) || isNextMonth(current_transaction_date!, last_transaction_date!)) {
-                        analysis_results.values.unshift([])
-                        console.log(analysis_results.values)
+                    const table = {
+                        'majorDimension': 'ROWS',
+                        'values': []
                     }
-                }
-
-                setIsFetching(true);
-                const result = await appendSheetData(spreadsheetId, sheetName, analysis_results);
-                
-                if (result) {
-                    setIsFetching(false);
-                    setIsSuccess(true);
-					toast.success('Successfully added into google sheet!');
+                    const empty_result = await appendSheetData(spreadsheetId, sheetName, table);
+                    const regex = /^.*![A-Z]+\d+:[A-Z]+(\d+)$/;
+                    const match = empty_result.result.tableRange.match(regex);
+                    if (match) {
+                        const last_row = match[1];
+                        const get_last_row = await getSheetData(spreadsheetId, sheetName.concat("!A", last_row, ":ZZ", last_row))
+                        const last_transaction_date = get_last_row.result.values.at(0)?.at(0)
+                        const current_transaction_date = analysis_results.values.at(0)?.at(0)
+    
+                        if (isMonthNaN(last_transaction_date!) || isNextMonth(current_transaction_date!, last_transaction_date!)) {
+                            analysis_results.values.unshift([])
+                            console.log(analysis_results.values)
+                        }
+                    }
+    
+                    const result = await appendSheetData(spreadsheetId, sheetName, analysis_results);
+                    
+                    if (result) {
+                        setIsFetching(false);
+                        setIsSuccess(true);
+                        toast.success('Successfully added into google sheet!');
+                    }
                 }
 
 			} catch (err) {
 				if (axios.isAxiosError(err)) {
-                    toast.error(err.message);
+                    toast.error(err.message, {autoClose: 10000});
 				}
 				if (err instanceof Error) {
-					toast.error(err.stack);
+					toast.error(err.stack, {autoClose: 10000});
 				}
 				setFormatImage(null);
 				setImage(null);
