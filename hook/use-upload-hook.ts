@@ -6,6 +6,7 @@ import { DROPZONE_OPTIONS } from '@/library/dropzone-option';
 import { uploadFile } from '@/library/upload-file-lib';
 import { processReceipt } from '@/library/process-receipt';
 import { appendSheetData, getSheetData } from '@/library/google-sheet-actions';
+import { data } from 'autoprefixer';
 
 
 type ImageRes = {
@@ -33,11 +34,9 @@ function isNextMonth(date1Str: string, date2Str: string): boolean {
     // Get the year and month for each date
     const year1 = date1.getFullYear();
     const month1 = date1.getMonth();
-    console.log(month1)
     
     const year2 = date2.getFullYear();
     const month2 = date2.getMonth();
-    console.log(month2)
 
     if (year1 === year2) {
         return month1 != month2;
@@ -50,8 +49,8 @@ function isNextMonth(date1Str: string, date2Str: string): boolean {
 }
 
 export const useUpload = () => {
-	const [formatImage, setFormatImage] = useState<FormData | null>(null);
-	const [image, setImage] = useState<ImageRes | null>(null);
+	const [formatImage, setFormatImage] = useState<FormData[] | null>(null);
+	const [image, setImage] = useState<ImageRes[] | null>(null);
 	const [isFetching, setIsFetching] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [progressStatus, setProgressStatus] = useState(0);
@@ -59,29 +58,44 @@ export const useUpload = () => {
 	const inputRef = useRef<HTMLInputElement>(null);
     
 	const onDrop = useCallback((acceptedFiles: File[]) => {
-		if (!acceptedFiles.length) return;
+        const validFiles = [...acceptedFiles].filter((file) => file?.type.match(imageTypeRegex))
 
-		const formData = new FormData();
-		formData.append('file', acceptedFiles[0]);
-		formData.append('upload_preset', preset);
+        if (validFiles.length === 0) {
+            toast.error("No valid files to upload on drop", { theme: 'light', autoClose: 10000 })
+            return;
+        }
 
-		setFormatImage(formData);
+        const formDataArray = validFiles.map((file) => {
+            const formData = new FormData();
+            formData.append('file', acceptedFiles[0]);
+            formData.append('upload_preset', preset);
+            return formData
+        })
+
+        console.log('on drop')
+
+		setFormatImage(formDataArray);
 	}, []);
 
 	const { getRootProps, getInputProps, fileRejections, isDragActive } = useDropzone({ ...DROPZONE_OPTIONS, onDrop });
 
 	const onChangeFile = (e: ChangeEvent<HTMLInputElement>): void => {
 		const files = e.target?.files!;
+        const validFiles = [...files].filter((file) => file?.type.match(imageTypeRegex))
 
-		const formData = new FormData();
-		const file = files?.[0];
+        if (validFiles.length === 0) {
+            toast.error("No valid files to upload on change", { theme: 'light', autoClose: 10000 })
+            return;
+        }
 
-		if (!file?.type.match(imageTypeRegex)) return;
+		const formDataArray = validFiles.map((file) => {
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('upload_preset', preset)
+            return formData;
+        })
 
-		formData.append('file', file);
-		formData.append('upload_preset', preset);
-
-		setFormatImage(formData);
+		setFormatImage(formDataArray);
 	};
 
 	useEffect(() => {
@@ -109,22 +123,24 @@ export const useUpload = () => {
 
 			try {
 				setIsFetching(true);
-				const data = await uploadFile({
-					formData: formatImage,
-					onUploadProgress(progress) {
-						setProgressStatus(progress);
-					},
-				});
 
-				if (data) {
+                const uploadPromises = formatImage.map(async (formData) => {
+                    return await uploadFile({
+                        formData: formData,
+                        onUploadProgress: (progress) => setProgressStatus(progress),
+                    })
+                })
+                const dataList =  await Promise.all(uploadPromises);
+
+				if (dataList.length > 0) {
 					setFormatImage(null);
-					setImage(data);
+					setImage(dataList);
 					setIsFetching(false);
 					setIsSuccess(true);
 				}
 
-                setIsFetching(true);
-                const analysis_results = await processReceipt(data.secure_url);
+                const receiptURLS = dataList.map((data) => data.secure_url)
+                const analysis_results = await processReceipt(receiptURLS);
 
                 if (analysis_results 
                     && analysis_results.values.length > 0 

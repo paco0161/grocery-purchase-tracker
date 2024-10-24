@@ -6,7 +6,7 @@ type ImageResponse = {
 };
 
 type UploadFileProps = {
-	formData: FormData | null;
+	formData: FormData;
 	onUploadProgress: (progress: number) => void;
 };
 
