@@ -1,4 +1,5 @@
 
+from flask import current_app
 from models.custom_error import APIError
 
 
@@ -6,12 +7,12 @@ class ReceiptAnalyzer:
     def __init__(self, azure_api_client):
         self.azure_api_client = azure_api_client
 
-    def analyze_receipt(self, url: str=None):
+    def analyze_receipt(self, url: str):
         try:
             return self.azure_api_client.analyze_doc_from_url(url)
         except Exception as error:
-            print('Error in analyzing receipt in Azure')
-            raise APIError(f'{error}')
+            current_app.logger.error(f"Error in analyzing receipt in Azure: {error}", exc_info=True)
+            raise APIError(f"Failed to analyze receipt in Azure: {error}") from error
 
     def log_analysis(result):
         for idx, receipt in enumerate(result.documents):

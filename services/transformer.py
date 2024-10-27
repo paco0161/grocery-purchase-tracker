@@ -2,6 +2,8 @@ from datetime import datetime
 import re
 import logging
 
+from flask import current_app
+
 from models.custom_error import ReceiptTransformError
 from models.grocery_store import GroceryStoreEnum
 from models.sheet_request import SheetRequest
@@ -10,22 +12,23 @@ class Transformer:
     def __init__(self):
         self.log = logging.getLogger(__name__)
 
-    def generate_sheet_request(self, result) -> SheetRequest:
+    def generate_sheet_request(self, results) -> SheetRequest:
         values = []
         try:
-            for receipt in result.documents:
-                transaction_date = self._transform_transaction_date(receipt.fields.get("TransactionDate"), receipt.fields.get("MerchantName"))
-                merchant_name = self._transform_merchant_name(receipt.fields.get("MerchantName"))
-                items =  self._transform_items(receipt.fields.get("Items"))
-                total = self._transform_total(receipt.fields.get("Total"), merchant_name, result.content)
-                redeem_note = self._calculate_no_frills_redeem(result.content) if self._is_redeemed(merchant_name, result.content) else ""
+            for analyzed_result in results:
+                for receipt in analyzed_result.documents:
+                    transaction_date = self._transform_transaction_date(receipt.fields.get("TransactionDate"), receipt.fields.get("MerchantName"))
+                    merchant_name = self._transform_merchant_name(receipt.fields.get("MerchantName"))
+                    items =  self._transform_items(receipt.fields.get("Items"))
+                    total = self._transform_total(receipt.fields.get("Total"), merchant_name, analyzed_result.content)
+                    redeem_note = self._calculate_no_frills_redeem(analyzed_result.content) if self._is_redeemed(merchant_name, analyzed_result.content) else ""
 
                 entry = [transaction_date, merchant_name, items, total, redeem_note]
                 values.append(entry)
 
             return SheetRequest(values)
         except Exception as error:
-            print('Error in transforming receipt data')
+            current_app.logger.error(f'Error occurred when transforming receipt data: {error}', exc_info=True)
             raise ReceiptTransformError(f'{error}')
 
     def _transform_transaction_date(self, transaction_date, merchant_name):

@@ -21,6 +21,7 @@ export const ButtonFile: FC<Props> = (props) => {
 			Choose a file
 			<input
 				ref={inputRef}
+                multiple
 				type='file'
 				name='image'
 				accept='image/png, image/gif, image/jpeg'
