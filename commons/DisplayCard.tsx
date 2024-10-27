@@ -29,7 +29,9 @@ export const DisplayCard = () => {
 						)}
 
 						{u.image ? (
-							<PreviewImage imageUrl={u.image.secure_url} />
+                            u.image.map((img) => (
+                            <PreviewImage key={img.public_id} imageUrl={img.secure_url} />
+                        ))	
 						) : (
 							<Dropzone isActive={u.isDragActive} onInputProps={u.getInputProps} />
 						)}
@@ -40,7 +42,9 @@ export const DisplayCard = () => {
 							<ButtonFile onClick={() => u.inputRef.current?.click()} inputRef={u.inputRef} onChange={u.onChangeFile} />
 						)}
 
-						{u.isSuccess && <InputLink value={u.image?.secure_url!} />}
+						{u.isSuccess && u.image && u.image.map((img) => (
+                            <InputLink key={img.public_id} value={img.secure_url!} />
+                        ))}
 					</div>
 				</div>
 			)}
