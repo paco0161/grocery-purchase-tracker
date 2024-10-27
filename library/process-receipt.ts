@@ -23,8 +23,13 @@ export const processReceipt = async (receiptURLs: string[]): Promise<ProcessResp
         if (axios.isAxiosError(error)) {
             if (error.response) {
                 // Handle backend errors and display the error message
-                const backendError = error.response.data?.error || 'Unknown backend error';
-                toast.error(`Backend Error: ${backendError}`, { autoClose: 10000 });
+                const backendError = error.response.data?.error ? JSON.stringify(error.response.data.error) : 'Unknown backend error';
+
+                if (error.response.status === 504) {
+                    toast.error('The request timed out while processing your receipts. Please try again later.', { autoClose: 10000 });
+                } else {
+                    toast.error(`Backend Error: ${backendError}`, { autoClose: 10000 });
+                }
             } else {
                 // Handle network or request issues
                 toast.error(`Request Error: ${error.message}`, { autoClose: 10000 });
