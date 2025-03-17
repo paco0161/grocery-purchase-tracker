@@ -15,15 +15,15 @@ class Transformer:
     def generate_sheet_request(self, results) -> SheetRequest:
         values = []
         try:
-            for analyzed_result in results:
-                for receipt in analyzed_result.documents:
+            for result in results:
+                for receipt in result["analysis"].documents:
                     transaction_date = self._transform_transaction_date(receipt.fields.get("TransactionDate"), receipt.fields.get("MerchantName"))
                     merchant_name = self._transform_merchant_name(receipt.fields.get("MerchantName"))
                     items =  self._transform_items(receipt.fields.get("Items"))
-                    total = self._transform_total(receipt.fields.get("Total"), merchant_name, analyzed_result.content)
-                    redeem_note = self._calculate_no_frills_redeem(analyzed_result.content) if self._is_redeemed(merchant_name, analyzed_result.content) else ""
+                    total = self._transform_total(receipt.fields.get("Total"), merchant_name, result["analysis"].content)
+                    redeem_note = self._calculate_no_frills_redeem(result["analysis"].content) if self._is_redeemed(merchant_name, result["analysis"].content) else ""
 
-                entry = [transaction_date, merchant_name, items, total, redeem_note]
+                entry = [transaction_date, merchant_name, items, total, redeem_note, result["url"]]
                 values.append(entry)
 
             return SheetRequest(values)

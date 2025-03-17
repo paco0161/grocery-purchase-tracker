@@ -12,15 +12,20 @@ class ReceiptService:
         # self.sheet_saver = SheetSaver(SheetAPIClient())
         self.transformer = Transformer()
 
-    def process_receipt(self, receiptURLs: List[str]):
+    def process_receipt(self, receipt_urls: List[str]):
         try:
-            all_analysis_result = []
+            process_result = []
 
-            for url in receiptURLs:
+            for url in receipt_urls:
+                result = {}
+                
                 analysis = self.receipt_analyzer.analyze_receipt(url)
-                all_analysis_result.append(analysis)
 
-            return self.transformer.generate_sheet_request(all_analysis_result)
+                result["url"] = url
+                result["analysis"] = analysis
+                process_result.append(result)
+
+            return self.transformer.generate_sheet_request(process_result)
         
         except APIError as error:
             current_app.logger.error(f"API error occurred during receipt analysis: {error}", exc_info=True)
