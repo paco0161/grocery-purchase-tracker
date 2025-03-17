@@ -57,7 +57,7 @@ class Transformer:
         if total:
             if merchant_name == GroceryStoreEnum.NO_FRILLS.value:
                 match = re.search(r'CREDIT TN\n(\d+\.\d+)', text)
-                return float(match.group(1)) if match else total
+                return float(match.group(1)) if match else total.value
             return total.value
         
     def _is_redeemed(self, merchant_name, text):

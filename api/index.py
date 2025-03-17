@@ -54,6 +54,3 @@ def process_receipt():
     except Exception as error:
         app.logger.error(f'Error in analyzing receipt: {error}', exc_info=True)
         return jsonify({'error': str(error)}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5328)

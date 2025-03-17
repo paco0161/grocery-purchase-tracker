@@ -21,6 +21,7 @@ class GroceryStoreEnum(Enum):
     IKEA = 'IKEA'
     GALLERIA = 'Galleria'
     FOOD_BASICS = 'Food Basics'
+    FRESHCO = 'FreshCo'
 
     _variations = {
         'NO_FRILLS': ["NICK'S NO FRILLS", "NO FRILLS", "NOFRILLS"],
@@ -42,7 +43,8 @@ class GroceryStoreEnum(Enum):
         'CANADIAN_TIRE': ["CANADIAN TIRE", "CANTIRE"],
         'IKEA': ["IKEA"],
         'GALLERIA': ['GALLERIA SUPERMARKET', 'GALLERIA', 'Galleria\nSUPERMARKET'],
-        'FOOD_BASICS': ['FOOD BASICS', 'FOOD_BASICS', 'FOOD\nBASICS']
+        'FOOD_BASICS': ['FOOD BASICS', 'FOOD_BASICS', 'FOOD\nBASICS'],
+        'FRESHCO': ['FRESHCO', 'FRESH CO', 'FRESH_CO', 'FRESH\nCO'],
     }
 
     @classmethod
