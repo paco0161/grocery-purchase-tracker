@@ -37,7 +37,7 @@ const sheetName = process.env.NEXT_PUBLIC_GOOGLE_SHEET_NAME!;
 
 const table = {
     'majorDimension': 'ROWS',
-    'values': []
+    'values': [[]]
 };
 
 export const useProcessReceipt = (images: ImageRes[] | null, shouldProcess: boolean, setIsFetching: (isFetching: boolean) => void) => {
@@ -54,22 +54,23 @@ export const useProcessReceipt = (images: ImageRes[] | null, shouldProcess: bool
     
                 if (!isAnalysisEmpty) {
                     const emptyResult = await appendSheetData(spreadsheetId, sheetName, table);
-                    const regex = /^.*![A-Z]+\d+:[A-Z]+(\d+)$/;
+                    const regex = /(?<=[A-Z])(\d+)$/;
                     const match = emptyResult.result.tableRange.match(regex);
     
-                    if (match) {
-                        const last_row = match[1];
-                        const get_last_row = await getSheetData(spreadsheetId, sheetName.concat("!A", last_row, ":ZZ", last_row))
-                        const last_transaction_date = get_last_row.result.values.at(0)?.at(0)
-                        const current_transaction_date = analysisResults.values.at(0)?.at(0)
-    
-                        if (isMonthNaN(last_transaction_date!) || isNextMonth(current_transaction_date!, last_transaction_date!)) {
-                            analysisResults.values.unshift([])
-                            console.log(analysisResults.values)
-                        }
+                    const last_row = match![1];
+                    const get_last_row = await getSheetData(spreadsheetId, sheetName.concat("!A", last_row, ":ZZ", last_row))
+
+                    const last_transaction_date = get_last_row.result.values.at(0)?.at(0)
+                    const current_transaction_date = analysisResults.values.at(0)?.at(0)
+                    if (isMonthNaN(last_transaction_date!) || isNextMonth(current_transaction_date!, last_transaction_date!)) {
+                        analysisResults.values.unshift([])
+                        console.log(analysisResults.values)
                     }
+
+                    const tableRange = sheetName.concat("!A", (Number(last_row)+1).toString() , ":ZZ", (Number(last_row)+1).toString())
+                    console.log("Add data to the range " + tableRange)
     
-                    const result = await appendSheetData(spreadsheetId, sheetName, analysisResults);
+                    const result = await appendSheetData(spreadsheetId, tableRange, analysisResults);
                     if (result) {
                         toast.success('Successfully added into google sheet!');
                     }
